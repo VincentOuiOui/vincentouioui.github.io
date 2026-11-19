@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vincent Gessien — Deux actes</title>
+<meta name="description" content="Portfolio de Vincent Gessien : TournaMate et 2things1pic, deux projets, deux univers, un seul rideau.">
+<link rel="icon" href="assets/p/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,900;1,9..144,400;1,9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=6">
+</head>
+<body data-world="stage">
+
+<!-- ═══════════════════ LE RIDEAU (fixe, piloté par le scroll) ═══════════════════ -->
+<div class="curtain" id="curtain" aria-hidden="true">
+  <div class="curtain__panel curtain__panel--l" id="panelL">
+    <div class="curtain__folds"></div>
+    <div class="curtain__tie"></div>
+    <div class="curtain__text"></div>
+  </div>
+  <div class="curtain__panel curtain__panel--r" id="panelR">
+    <div class="curtain__folds"></div>
+    <div class="curtain__tie"></div>
+    <div class="curtain__text"></div>
+  </div>
+  <div class="curtain__valance" id="valance"></div>
+</div>
+
+<!-- Textes imprimés sur le rideau : clonés dans chaque moitié par le JS -->
+<template id="curtainScenes">
+  <div class="cscene cscene--intro">
+    <p class="cscene__kicker">Vincent Gessien présente</p>
+    <h1 class="cscene__title">Deux actes</h1>
+    <p class="cscene__sub">TournaMate &nbsp;·&nbsp; 2things1pic</p>
+    <p class="cscene__hint">faites défiler pour lever le rideau</p>
+  </div>
+  <div class="cscene cscene--entracte">
+    <p class="cscene__kicker">— fin du premier acte —</p>
+    <h2 class="cscene__title">Entracte</h2>
+    <p class="cscene__sub">On change de décor. Éteignez les projecteurs du stade.</p>
+  </div>
+  <div class="cscene cscene--fin">
+    <h2 class="cscene__title cscene__title--fin">Fin</h2>
+  </div>
+</template>
+
+<!-- Couche interactive du final (non coupée en deux) -->
+<div class="finale-ui" id="finaleUI">
+  <p class="finale-ui__thanks">Merci d'être venu·e jusqu'ici.</p>
+  <div class="finale-ui__actions">
+    <button class="btn-gold" id="applause">👏 Applaudir</button>
+    <a class="btn-ghost" href="mailto:contact@exemple.com">Me contacter</a>
+    <a class="btn-ghost" href="https://www.linkedin.com/in/vincent-gessien-9049b52a/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+  <button class="finale-ui__encore" id="encore">↺ Rappel — revoir le spectacle</button>
+</div>
+<canvas id="confetti" class="confetti"></canvas>
+
+<!-- Programme -->
+<nav class="programme" aria-label="Programme">
+  <span class="programme__label">Programme</span>
+  <a href="#intro" data-k="stage">Ouverture</a>
+  <a href="#acte1" data-k="stadium">I · TournaMate</a>
+  <a href="#entracte" data-k="entracte">Entracte</a>
+  <a href="#acte2" data-k="cinema">II · 2things1pic</a>
+  <a href="#finale" data-k="fin">Fin</a>
+</nav>
+
+<main>
+
+<!-- ═══════════════════ OUVERTURE ═══════════════════ -->
+<section id="intro" class="intro" data-world="stage">
+  <div class="intro__sticky">
+    <div class="stage">
+      <div class="stage__spot" id="spot"></div>
+      <div class="stage__floor"></div>
+      <div class="stage__content">
+        <p class="stage__kicker">Développeur full-stack · web &amp; mobile</p>
+        <h2 class="stage__title"><span>Deux projets.</span><span class="ital">Deux univers.</span></h2>
+        <p class="stage__lede">Un organisateur de tournois qui sent la pelouse et les projecteurs. Un jeu quotidien qui sent le pop-corn et le velours. Même développeur, mêmes exigences, deux scènes.</p>
+        <div class="tickets">
+          <a href="#acte1" class="ticket ticket--blue">
+            <span class="ticket__act">Acte I</span>
+            <span class="ticket__name">TournaMate</span>
+            <span class="ticket__place">Le stade, en nocturne</span>
+            <span class="ticket__stub">N°&nbsp;001</span>
+          </a>
+          <a href="#acte2" class="ticket ticket--gold">
+            <span class="ticket__act">Acte II</span>
+            <span class="ticket__name">2things1pic</span>
+            <span class="ticket__place">La salle obscure</span>
+            <span class="ticket__stub">N°&nbsp;002</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ ACTE I : TOURNAMATE (le stade) ═══════════════════ -->
+<section id="acte1" class="stadium" data-world="stadium">
+  <div class="stadium__lights" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+  <svg class="pitch" viewBox="0 0 1050 680" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+    <g class="chalk" fill="none" stroke="#fff" stroke-width="3">
+      <rect x="25" y="25" width="1000" height="630" pathLength="1"/>
+      <line x1="525" y1="25" x2="525" y2="655" pathLength="1"/>
+      <circle cx="525" cy="340" r="92" pathLength="1"/>
+      <rect x="25" y="178" width="165" height="324" pathLength="1"/>
+      <rect x="860" y="178" width="165" height="324" pathLength="1"/>
+      <rect x="25" y="258" width="55" height="164" pathLength="1"/>
+      <rect x="970" y="258" width="55" height="164" pathLength="1"/>
+      <path d="M190 290 A92 92 0 0 1 190 390" pathLength="1"/>
+      <path d="M860 290 A92 92 0 0 0 860 390" pathLength="1"/>
+    </g>
+  </svg>
+
+  <!-- Tableau d'affichage -->
+  <header class="board reveal">
+    <div class="board__top">
+      <span class="board__tag">ACTE I</span>
+      <span class="board__clock" id="clock">00:00</span>
+      <span class="board__live">● LIVE</span>
+    </div>
+    <h2 class="board__name led">TOURNAMATE</h2>
+    <div class="board__score">
+      <span>DOMICILE</span><b class="led" id="scoreH">0</b><em>–</em><b class="led" id="scoreA">0</b><span>EXTÉRIEUR</span>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="s-hero reveal">
+      <p class="s-kicker">Gestion de tournois FIFA · Web, iOS &amp; Android</p>
+      <h3 class="s-title">Organisez vos tournois<br>entre amis. <span class="blue">Le reste est automatique.</span></h3>
+      <p class="s-lede">1v1, 2v2, aller-retour, play-offs : TournaMate génère le calendrier, met à jour le classement à chaque score saisi et dessine le tableau final tout seul. Tout le monde suit la compétition depuis son téléphone.</p>
+      <div class="cta-row"><span class="soon"><span class="soon__dot"></span>Bientôt en ligne</span><span class="soon__note">Web, iOS &amp; Android</span></div>
+    </div>
+
+    <!-- Feuille de match : les 3 étapes -->
+    <div class="timeline reveal" id="timeline">
+      <div class="timeline__track"><span class="timeline__ball" id="ball">⚽</span></div>
+      <div class="timeline__step"><b>0'</b><h4>Coup d'envoi</h4><p>Ajoutez les joueurs, choisissez 1v1 ou 2v2, réglez les règles. Trente secondes.</p></div>
+      <div class="timeline__step"><b>45'</b><h4>Tirage automatique</h4><p>Les matchs sont générés et répartis équitablement en journées, avec matchs simultanés.</p></div>
+      <div class="timeline__step"><b>90'</b><h4>Coup de sifflet final</h4><p>Les scores tombent, le classement bouge en direct, les play-offs se génèrent seuls.</p></div>
+    </div>
+
+    <!-- Classement live -->
+    <div class="split">
+      <div class="split__text reveal">
+        <p class="s-kicker">Suivi en direct</p>
+        <h3 class="s-title s-title--sm">Le classement se recalcule<br><span class="blue">à chaque but.</span></h3>
+        <p>Points, victoires, différence de buts : tout se recalcule instantanément côté serveur. Le tableau ci-contre tourne en vrai : chaque résultat qui tombe réordonne les lignes.</p>
+        <div class="ticker" id="ticker"><span class="ticker__dot"></span><span id="tickerText">En attente du premier résultat…</span></div>
+      </div>
+      <div class="standings reveal" id="standings">
+        <div class="standings__head"><span>#</span><span>Joueur</span><span>J</span><span>Diff</span><span>Pts</span></div>
+        <ol id="standingsBody"></ol>
+      </div>
+    </div>
+
+    <!-- Roue -->
+    <div class="split split--rev">
+      <div class="wheel reveal">
+        <div class="wheel__pin"></div>
+        <canvas id="wheel" width="520" height="520" aria-label="Roue de tirage au sort"></canvas>
+        <button class="wheel__btn" id="spin">SPIN</button>
+      </div>
+      <div class="split__text reveal">
+        <p class="s-kicker">Tirage au sort</p>
+        <h3 class="s-title s-title--sm">Essayez la roue.<br><span class="blue">Elle ne triche pas.</span></h3>
+        <p>Chaque joueur tourne la roue pour découvrir son niveau d'étoiles, puis son équipe. Filtres par pays, boost d'étoiles, versions d'équipes : tout est aléatoire, tout est équitable.</p>
+        <div class="draw" id="drawResult"><span class="draw__label">Votre tirage</span><span class="draw__val">—</span></div>
+      </div>
+    </div>
+
+    <!-- Bracket -->
+    <div class="bracket-wrap reveal" id="bracketWrap">
+      <p class="s-kicker center">Play-offs automatiques</p>
+      <h3 class="s-title s-title--sm center">Quarts, demies, finale.<br><span class="blue">Généré selon le classement.</span></h3>
+      <svg class="bracket" id="bracket" viewBox="0 0 960 440" role="img" aria-label="Tableau de play-offs"></svg>
+    </div>
+
+    <!-- Galerie captures -->
+    <div class="gallery" id="tGallery">
+      <figure class="shot shot--a"><img src="assets/t/sombre-tournoi.jpg" alt="Page d'un tournoi TournaMate en thème sombre : journées et matchs" loading="lazy"><figcaption>Journées &amp; matchs</figcaption></figure>
+      <figure class="shot shot--b"><img src="assets/t/sombre-classement.jpg" alt="Classement d'un tournoi avec le vainqueur" loading="lazy"><figcaption>Classement</figcaption></figure>
+      <figure class="shot shot--c"><img src="assets/t/sombre-playoffs.jpg" alt="Tableau des play-offs : demi-finales et finale" loading="lazy"><figcaption>Play-offs</figcaption></figure>
+      <figure class="shot shot--d"><img src="assets/t/sombre-fiche.jpg" alt="Fiche joueur : Elo, forme et évolution" loading="lazy"><figcaption>Fiche joueur</figcaption></figure>
+    </div>
+
+    <!-- Sous le capot -->
+    <div class="stats reveal">
+      <div class="stat"><b class="led" data-count="3">0</b><span>formats : solo, 2v2, play-off</span></div>
+      <div class="stat"><b class="led led--inf" aria-label="Infini">∞</b><span>joueurs par tournoi, sans limite</span></div>
+      <div class="stat"><b class="led" data-count="3">0</b><span>langues : FR · EN · ES</span></div>
+      <div class="stat"><b class="led" data-count="3">0</b><span>plateformes : web, iOS, Android</span></div>
+    </div>
+    <ul class="chips chips--stadium reveal">
+      <li>React</li><li>TypeScript</li><li>Vite</li><li>Node · Express</li><li>Sequelize</li><li>PostgreSQL</li><li>JWT + OTP email</li><li>Capacitor</li><li>Playwright E2E</li><li>Docker · nginx</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════════ ENTRACTE ═══════════════════ -->
+<section id="entracte" class="entracte" data-world="entracte">
+  <div class="entracte__sticky">
+    <div class="leader" id="leader">
+      <div class="leader__sweep"></div>
+      <div class="leader__cross"></div>
+      <div class="leader__ring"></div>
+      <span class="leader__num" id="leaderNum">3</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ ACTE II : 2THINGS1PIC (le cinéma) ═══════════════════ -->
+<section id="acte2" class="cinema" data-world="cinema">
+  <div class="grain" aria-hidden="true"></div>
+
+  <div class="theatre">
+    <div class="theatre__drape theatre__drape--l" aria-hidden="true"></div>
+    <div class="theatre__drape theatre__drape--r" aria-hidden="true"></div>
+    <div class="theatre__valance" aria-hidden="true"></div>
+    <div class="theatre__beam" aria-hidden="true"></div>
+
+    <div class="marquee reveal" id="marquee">
+      <span class="marquee__act">Acte II — à l'affiche</span>
+      <h2 class="marquee__name">2things<span>1</span>pic</h2>
+      <p class="marquee__tag">Une image. Deux films. Chaque jour.</p>
+    </div>
+
+    <!-- Le jeu : lampe torche -->
+    <div class="screen reveal" id="screen">
+      <img class="screen__dim" src="assets/p/defi1.jpg" alt="">
+      <img class="screen__lit" src="assets/p/defi1.jpg" alt="Image fusionnée du jour : deux films en une seule image">
+      <span class="screen__hint" id="screenHint">Promenez la lumière sur l'écran · cliquez pour rallumer la salle</span>
+    </div>
+
+    <form class="guess reveal" id="guess" autocomplete="off">
+      <label class="stub"><span>Film n°1</span><input placeholder="Titre du premier film" maxlength="60"></label>
+      <span class="guess__plus">+</span>
+      <label class="stub"><span>Film n°2</span><input placeholder="Titre du second film" maxlength="60"></label>
+      <button class="btn-gold">Valider</button>
+      <p class="guess__msg" id="guessMsg" aria-live="polite"></p>
+    </form>
+
+    <a class="btn-gold btn-site" href="https://2things1pic.com" target="_blank" rel="noopener">🎟️ Jouer sur 2things1pic.com</a>
+  </div>
+
+  <div class="wrap wrap--cinema">
+    <div class="c-intro reveal">
+      <p class="c-kicker">Le pitch</p>
+      <h3 class="c-title">Chaque jour, une image fusionne deux films cultes.<br><em>À vous de reconnaître les deux.</em></h3>
+      <p class="c-lede">Comptes, points, séries, trophées, ligues entre amis, classement mensuel, back-office pour créer les défis, contributions de la communauté… et des apps natives iOS et Android avec notifications push.</p>
+      <a class="site-link" href="https://2things1pic.com" target="_blank" rel="noopener">2things1pic.com <span>↗</span></a>
+    </div>
+
+    <!-- Comment naît une image -->
+    <div class="reel reveal" id="reel">
+      <div class="reel__beam"></div>
+      <div class="reel__step"><span class="reel__n">1</span><h4>TMDB</h4><p>Recherche des films, affiches et métadonnées via l'API.</p></div>
+      <div class="reel__step"><span class="reel__n">2</span><h4>Tournage</h4><p>Génération multimodale : deux univers fondus en une seule image.</p></div>
+      <div class="reel__step"><span class="reel__n">3</span><h4>Back-office</h4><p>Les admins valident, programment et dosent la difficulté.</p></div>
+      <div class="reel__step"><span class="reel__n">4</span><h4>Projection</h4><p>Minuit : le défi sort, les notifications partent, les joueurs devinent.</p></div>
+    </div>
+  </div>
+
+  <!-- Pellicule : défis passés (défilement horizontal) -->
+  <div class="filmstrip" id="filmstrip">
+    <div class="filmstrip__head wrap wrap--cinema">
+      <p class="c-kicker">Les séances précédentes</p>
+      <h3 class="c-title c-title--sm">Les archives se rejouent.<br><em>Survolez pour faire le point.</em></h3>
+    </div>
+    <div class="filmstrip__track" id="filmTrack">
+      <div class="frame"><img src="assets/p/defi1.jpg" alt="Défi du 26 juin 2026" loading="lazy"><span>26.06.2026</span></div>
+      <div class="frame"><img src="assets/p/defi2.jpg" alt="Défi du 18 octobre 2026" loading="lazy"><span>18.10.2026</span></div>
+      <div class="frame"><img src="assets/p/defi3.jpg" alt="Défi du 24 septembre 2026" loading="lazy"><span>24.09.2026</span></div>
+      <div class="frame"><img src="assets/p/defi4.jpg" alt="Défi du 15 septembre 2026" loading="lazy"><span>15.09.2026</span></div>
+      <div class="frame"><img src="assets/p/defi5.jpg" alt="Défi du 13 août 2026" loading="lazy"><span>13.08.2026</span></div>
+    </div>
+  </div>
+
+  <div class="wrap wrap--cinema">
+    <!-- Gamification -->
+    <div class="awards">
+      <div class="awards__text reveal">
+        <p class="c-kicker">La cérémonie</p>
+        <h3 class="c-title c-title--sm">Points, séries,<br><em>et une vitrine à trophées.</em></h3>
+        <p>Premier essai, séries de jours, contributions, likes reçus, top du mois : chaque trophée existe en bronze, argent, or et cyan. Des jokers de série sauvent les oublis, et un bilan mensuel raconte votre mois de cinéphile.</p>
+        <div class="streak"><span class="streak__flame">🔥</span><b class="streak__n" data-count="42">0</b><span>jours de série</span></div>
+      </div>
+      <div class="shelf reveal">
+        <div class="shelf__spot"></div>
+        <img src="assets/p/01_trophy_cup_classic.png" alt="Trophée coupe">
+        <img src="assets/p/08_medal_1st.png" alt="Médaille de première place">
+        <img src="assets/p/04_trophy_crystal.png" alt="Trophée cristal">
+        <img src="assets/p/02_trophy_star.png" alt="Trophée étoile">
+        <img src="assets/p/06_trophy_cup_star.png" alt="Coupe étoilée">
+        <div class="shelf__plank"></div>
+        <div class="levels">
+          <img src="assets/p/level_01.png" alt="Niveau 1"><img src="assets/p/level_05.png" alt="Niveau 5"><img src="assets/p/level_10.png" alt="Niveau 10">
+        </div>
+      </div>
+    </div>
+
+    <!-- Générique -->
+    <div class="credits reveal">
+      <p class="c-kicker center">Générique</p>
+      <dl>
+        <dt>Réalisation</dt><dd>Next.js 15 · App Router · Server Actions</dd>
+        <dt>Décors</dt><dd>Tailwind CSS · skins dynamiques</dd>
+        <dt>Mémoire</dt><dd>PostgreSQL · Prisma</dd>
+        <dt>Contrôle des billets</dt><dd>NextAuth v5 · Google OAuth · OTP email</dd>
+        <dt>Effets spéciaux</dt><dd>IA générative · TMDB</dd>
+        <dt>Version mobile</dt><dd>Capacitor iOS &amp; Android · PWA · push</dd>
+        <dt>Sous-titres</dt><dd>Français · English · Español</dd>
+        <dt>Script</dt><dd>TypeScript · Vitest</dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ FINAL ═══════════════════ -->
+<section id="finale" class="finale" data-world="fin"></section>
+
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="main.js?v=6"></script>
+</body>
+</html>
