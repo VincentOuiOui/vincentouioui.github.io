@@ -614,3 +614,12 @@ body[data-world="stadium"] .programme a.is-active { color: var(--blue-2); }
 }
 .site-link:hover { border-color: var(--gold); gap: 14px; }
 .site-link span { font-style: normal; font-size: .8em; }
+.btn-stadium {
+  display: inline-flex; align-items: center; gap: 12px; padding: 14px 24px; border-radius: 999px; text-decoration: none;
+  font-family: var(--f-stad); font-weight: 800; font-size: 24px; letter-spacing: .04em; text-transform: uppercase; color: #fff;
+  background: radial-gradient(circle at 30% 20%, #60a5fa, #1d4ed8); border: 1px solid rgba(255,255,255,.25);
+  box-shadow: 0 10px 30px rgba(29,78,216,.5), 0 0 40px rgba(59,130,246,.3);
+  transition: transform .25s var(--ease), box-shadow .25s;
+}
+.btn-stadium:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(29,78,216,.6), 0 0 60px rgba(59,130,246,.45); }
+.btn-stadium .soon__dot { background: #4ade80; box-shadow: 0 0 10px #4ade80; }
